@@ -14,12 +14,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useCartStore } from "@/stores/cart"
 import { CartDrawer } from "@/components/cart/CartDrawer"
+import { NotificationBell } from "@/components/layout/NotificationBell"
 import { useState, useEffect, useRef } from "react"
 import { cn } from "@/lib/utils"
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/ebooks", label: "E-books" },
+  { href: "/autores", label: "Autores" },
   { href: "/sobre", label: "Sobre" },
   { href: "/contato", label: "Contato" },
 ]
@@ -93,6 +95,8 @@ export function Header() {
               <Search className="h-5 w-5" />
             </Button>
           </Link>
+
+          <NotificationBell />
 
           <Sheet open={cartOpen} onOpenChange={setCartOpen}>
             <SheetTrigger asChild>

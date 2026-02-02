@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,7 +13,7 @@ import { toast } from "sonner"
 import { slugify } from "@/lib/utils"
 import { ImageUpload } from "@/components/admin/ImageUpload"
 
-const categories = [
+const fallbackCategories = [
   "Programação", "Marketing Digital", "Empreendedorismo",
   "Finanças Pessoais", "Produtividade", "Inteligência Artificial",
 ]
@@ -43,6 +43,16 @@ interface EbookFormProps {
 export function EbookForm({ ebook }: EbookFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [categories, setCategories] = useState<string[]>(fallbackCategories)
+
+  useEffect(() => {
+    fetch("/api/categories")
+      .then((res) => res.json())
+      .then((data: { name: string }[]) => {
+        if (data.length > 0) setCategories(data.map((c) => c.name))
+      })
+      .catch(() => {})
+  }, [])
   const [title, setTitle] = useState(ebook?.title || "")
   const [slug, setSlug] = useState(ebook?.slug || "")
   const [author, setAuthor] = useState(ebook?.author || "")

@@ -5,7 +5,9 @@ import { checkoutSchema } from "@/validations/checkout"
 import { createPixPayment } from "@/lib/payments/pix"
 import { createCardPayment } from "@/lib/payments/credit-card"
 import { createCryptoPayment } from "@/lib/payments/crypto"
+import { createBoletoPayment } from "@/lib/payments/boleto"
 import { processSuccessfulPayment } from "@/lib/payment-actions"
+import { checkoutRateLimit } from "@/lib/redis"
 
 export async function POST(request: Request) {
   let order: { id: string } | null = null
@@ -13,6 +15,17 @@ export async function POST(request: Request) {
     const session = await auth()
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Autenticação necessária" }, { status: 401 })
+    }
+
+    // Rate limit: 5 checkouts per 10 minutes per user
+    if (checkoutRateLimit) {
+      const { success } = await checkoutRateLimit.limit(session.user.id)
+      if (!success) {
+        return NextResponse.json(
+          { error: "Muitas tentativas de checkout. Tente novamente em alguns minutos." },
+          { status: 429 }
+        )
+      }
     }
 
     const body = await request.json()
@@ -173,6 +186,35 @@ export async function POST(request: Request) {
           orderId: order.id,
           paymentMethod: "CRYPTO",
           chargeUrl: crypto.chargeUrl,
+        })
+      }
+
+      case "BOLETO": {
+        if (!data.customerCpf) {
+          return NextResponse.json({ error: "CPF obrigatório para boleto" }, { status: 400 })
+        }
+
+        const boleto = await createBoletoPayment({
+          amount: total,
+          description,
+          orderId: order.id,
+          payerEmail: data.customerEmail || session.user.email!,
+          payerCpf: data.customerCpf,
+          payerFirstName: data.customerName?.split(" ")[0],
+          payerLastName: data.customerName?.split(" ").slice(1).join(" "),
+        })
+
+        await prisma.order.update({
+          where: { id: order.id },
+          data: { paymentId: boleto.paymentId, status: "PROCESSING" },
+        })
+
+        return NextResponse.json({
+          orderId: order.id,
+          paymentMethod: "BOLETO",
+          boletoUrl: boleto.boletoUrl,
+          barcode: boleto.barcode,
+          expiresAt: boleto.expiresAt,
         })
       }
     }

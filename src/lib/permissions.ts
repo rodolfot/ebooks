@@ -47,6 +47,9 @@ export type PermResource =
   | "analytics"
   | "employee"
   | "settings"
+  | "category"
+  | "author"
+  | "bundle"
 
 export type PermAction = "view" | "create" | "update" | "delete" | "export"
 
@@ -63,6 +66,9 @@ const PERMISSION_MATRIX: Record<string, Partial<Record<PermResource, PermAction[
     analytics: ["view", "export"],
     employee: ["view", "create", "update", "delete"],
     settings: ["view", "update"],
+    category: ["view", "create", "update", "delete"],
+    author: ["view", "create", "update", "delete"],
+    bundle: ["view", "create", "update", "delete"],
   },
   ADMIN: {
     ebook: ["view", "create", "update", "delete"],
@@ -75,6 +81,9 @@ const PERMISSION_MATRIX: Record<string, Partial<Record<PermResource, PermAction[
     analytics: ["view", "export"],
     employee: ["view", "create", "update", "delete"],
     settings: ["view", "update"],
+    category: ["view", "create", "update", "delete"],
+    author: ["view", "create", "update", "delete"],
+    bundle: ["view", "create", "update", "delete"],
   },
   MANAGER: {
     ebook: ["view", "create", "update", "delete"],
@@ -86,6 +95,9 @@ const PERMISSION_MATRIX: Record<string, Partial<Record<PermResource, PermAction[
     log: ["view", "export"],
     analytics: ["view", "export"],
     employee: ["view", "create", "update"],
+    category: ["view", "create", "update", "delete"],
+    author: ["view", "create", "update", "delete"],
+    bundle: ["view", "create", "update", "delete"],
   },
   EDITOR: {
     ebook: ["view", "create", "update", "delete"],
@@ -93,6 +105,9 @@ const PERMISSION_MATRIX: Record<string, Partial<Record<PermResource, PermAction[
     review: ["view", "update", "delete"],
     hotmart: ["view", "create", "update", "delete"],
     analytics: ["view"],
+    category: ["view", "create", "update", "delete"],
+    author: ["view", "create", "update", "delete"],
+    bundle: ["view", "create", "update", "delete"],
   },
   MODERATOR: {
     review: ["view", "update", "delete"],

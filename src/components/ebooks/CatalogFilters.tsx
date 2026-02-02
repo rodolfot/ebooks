@@ -1,19 +1,10 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
-
-const categories = [
-  { value: "all", label: "Todas as categorias" },
-  { value: "Programação", label: "Programação" },
-  { value: "Marketing Digital", label: "Marketing Digital" },
-  { value: "Empreendedorismo", label: "Empreendedorismo" },
-  { value: "Finanças Pessoais", label: "Finanças Pessoais" },
-  { value: "Produtividade", label: "Produtividade" },
-  { value: "Inteligência Artificial", label: "Inteligência Artificial" },
-]
 
 const priceRanges = [
   { value: "all", label: "Todos os preços" },
@@ -34,6 +25,21 @@ const sortOptions = [
 export function CatalogFilters() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const [categories, setCategories] = useState<{ value: string; label: string }[]>([
+    { value: "all", label: "Todas as categorias" },
+  ])
+
+  useEffect(() => {
+    fetch("/api/categories")
+      .then((res) => res.json())
+      .then((data: { name: string }[]) => {
+        setCategories([
+          { value: "all", label: "Todas as categorias" },
+          ...data.map((c) => ({ value: c.name, label: c.name })),
+        ])
+      })
+      .catch(() => {})
+  }, [])
 
   function updateFilter(key: string, value: string) {
     const params = new URLSearchParams(searchParams.toString())

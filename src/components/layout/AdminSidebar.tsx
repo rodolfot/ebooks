@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import {
-  LayoutDashboard, BookOpen, Package, Users, Tag, Star, Settings, Megaphone, ArrowLeft, ImageIcon, ScrollText, UserCog, DollarSign,
+  LayoutDashboard, BookOpen, Package, Users, Tag, Star, Settings, Megaphone, ArrowLeft, ImageIcon, ScrollText, UserCog, DollarSign, FolderOpen, PenTool, Layers,
 } from "lucide-react"
 
 const links = [
@@ -14,6 +14,9 @@ const links = [
   { href: "/admin/financeiro", label: "Financeiro", icon: DollarSign },
   { href: "/admin/clientes", label: "Clientes", icon: Users },
   { href: "/admin/cupons", label: "Cupons", icon: Tag },
+  { href: "/admin/categorias", label: "Categorias", icon: FolderOpen },
+  { href: "/admin/autores", label: "Autores", icon: PenTool },
+  { href: "/admin/bundles", label: "Bundles", icon: Layers },
   { href: "/admin/avaliacoes", label: "Avaliacoes", icon: Star },
   { href: "/admin/hotmart", label: "Hotmart Ads", icon: Megaphone },
   { href: "/admin/equipe", label: "Equipe", icon: UserCog },

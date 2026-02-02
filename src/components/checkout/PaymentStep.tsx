@@ -18,10 +18,11 @@ export function PaymentStep({ onSuccess, onProcessing }: PaymentStepProps) {
   const { items, couponCode, clearCart, total } = useCartStore()
   const [loading, setLoading] = useState(false)
   const [pixData, setPixData] = useState<{ orderId: string; qrCode: string; qrCodeBase64: string } | null>(null)
+  const [boletoData, setBoletoData] = useState<{ orderId: string; boletoUrl: string; barcode: string } | null>(null)
 
   const cartTotal = total()
 
-  async function handlePayment(method: "PIX" | "CREDIT_CARD" | "CRYPTO" | "FREE_COUPON") {
+  async function handlePayment(method: "PIX" | "CREDIT_CARD" | "CRYPTO" | "BOLETO" | "FREE_COUPON") {
     setLoading(true)
     try {
       const res = await fetch("/api/checkout", {
@@ -65,6 +66,13 @@ export function PaymentStep({ onSuccess, onProcessing }: PaymentStepProps) {
             window.location.href = data.chargeUrl
           }
           break
+        case "BOLETO":
+          setBoletoData({
+            orderId: data.orderId,
+            boletoUrl: data.boletoUrl,
+            barcode: data.barcode,
+          })
+          break
       }
     } catch {
       toast.error("Erro ao processar pagamento")
@@ -84,6 +92,44 @@ export function PaymentStep({ onSuccess, onProcessing }: PaymentStepProps) {
           onSuccess(pixData.orderId)
         }}
       />
+    )
+  }
+
+  if (boletoData) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Boleto Gerado</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            Seu boleto foi gerado. O pagamento pode levar até 3 dias úteis para ser confirmado.
+          </p>
+          {boletoData.barcode && (
+            <div className="space-y-2">
+              <p className="text-sm font-medium">Código de barras:</p>
+              <div className="flex gap-2">
+                <code className="flex-1 bg-muted p-2 rounded text-xs break-all">{boletoData.barcode}</code>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    navigator.clipboard.writeText(boletoData.barcode)
+                    toast.success("Código copiado!")
+                  }}
+                >
+                  Copiar
+                </Button>
+              </div>
+            </div>
+          )}
+          {boletoData.boletoUrl && (
+            <a href={boletoData.boletoUrl} target="_blank" rel="noopener noreferrer">
+              <Button className="w-full">Abrir Boleto</Button>
+            </a>
+          )}
+        </CardContent>
+      </Card>
     )
   }
 
@@ -126,6 +172,7 @@ export function PaymentStep({ onSuccess, onProcessing }: PaymentStepProps) {
           <TabsList className="w-full">
             <TabsTrigger value="pix" className="flex-1">PIX</TabsTrigger>
             <TabsTrigger value="card" className="flex-1">Cartao</TabsTrigger>
+            <TabsTrigger value="boleto" className="flex-1">Boleto</TabsTrigger>
             <TabsTrigger value="crypto" className="flex-1">Crypto</TabsTrigger>
           </TabsList>
 
@@ -144,6 +191,15 @@ export function PaymentStep({ onSuccess, onProcessing }: PaymentStepProps) {
             </p>
             <Button onClick={() => handlePayment("CREDIT_CARD")} disabled={loading} className="w-full">
               {loading ? "Processando..." : "Pagar com Cartao"}
+            </Button>
+          </TabsContent>
+
+          <TabsContent value="boleto" className="mt-4 space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Pague com boleto bancário. O prazo de compensação é de até 3 dias úteis. CPF obrigatório.
+            </p>
+            <Button onClick={() => handlePayment("BOLETO")} disabled={loading} className="w-full">
+              {loading ? "Gerando boleto..." : "Gerar Boleto"}
             </Button>
           </TabsContent>
 

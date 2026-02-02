@@ -2,7 +2,8 @@ import { prisma } from "@/lib/prisma"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { formatPrice } from "@/lib/utils"
-import { DollarSign, TrendingUp, Tag, ShoppingCart, BarChart3, Percent } from "lucide-react"
+import { DollarSign, TrendingUp, Tag, ShoppingCart, BarChart3, Percent, Download } from "lucide-react"
+import Link from "next/link"
 import { logPageView } from "@/lib/log-page-view"
 
 export const dynamic = "force-dynamic"
@@ -130,7 +131,14 @@ export default async function AdminFinanceiroPage() {
 
   return (
     <div className="space-y-8">
-      <h1 className="font-serif text-3xl font-bold">Financeiro</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="font-serif text-3xl font-bold">Financeiro</h1>
+        <Link href="/api/admin/financeiro/export" target="_blank">
+          <button className="inline-flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors">
+            <Download className="h-4 w-4" /> Exportar CSV
+          </button>
+        </Link>
+      </div>
 
       {/* Section 1: Revenue Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">

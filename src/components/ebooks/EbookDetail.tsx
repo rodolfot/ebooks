@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator"
 import { StarRating } from "@/components/shared/StarRating"
 import { AddToCartButton } from "@/components/cart/AddToCartButton"
 import { formatPrice } from "@/lib/utils"
+import { getInstallmentLabel } from "@/lib/installments"
 
 interface EbookDetailProps {
   ebook: {
@@ -68,6 +69,9 @@ export function EbookDetail({ ebook }: EbookDetailProps) {
               </span>
             )}
           </div>
+          {getInstallmentLabel(ebook.price) && (
+            <p className="text-sm text-muted-foreground">{getInstallmentLabel(ebook.price)}</p>
+          )}
 
           <AddToCartButton
             item={{

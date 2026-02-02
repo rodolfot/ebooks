@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { StarRating } from "@/components/shared/StarRating"
 import { AddToCartButton } from "@/components/cart/AddToCartButton"
 import { formatPrice } from "@/lib/utils"
+import { getInstallmentLabel } from "@/lib/installments"
 
 interface EbookCardProps {
   ebook: {
@@ -74,6 +75,9 @@ export function EbookCard({ ebook, isPartner, partnerUrl }: EbookCardProps) {
             )}
           </div>
         </div>
+        {getInstallmentLabel(ebook.price) && (
+          <p className="text-xs text-muted-foreground">{getInstallmentLabel(ebook.price)}</p>
+        )}
         {isPartner && partnerUrl ? (
           <a href={partnerUrl} target="_blank" rel="noopener noreferrer sponsored">
             <Button size="sm" variant="outline" className="w-full">
@@ -147,6 +151,9 @@ export function EbookCard({ ebook, isPartner, partnerUrl }: EbookCardProps) {
             )}
           </div>
         </div>
+        {getInstallmentLabel(ebook.price) && (
+          <p className="text-xs text-muted-foreground">{getInstallmentLabel(ebook.price)}</p>
+        )}
         <AddToCartButton
           item={{
             id: ebook.id,

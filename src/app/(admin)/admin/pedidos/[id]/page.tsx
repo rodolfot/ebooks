@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { formatPrice, formatDateTime } from "@/lib/utils"
+import { RefundButton } from "@/components/admin/RefundButton"
+import Link from "next/link"
 
 export const dynamic = "force-dynamic"
 
@@ -22,6 +24,16 @@ export default async function AdminOrderDetailPage({ params }: Props) {
       <div className="flex items-center gap-4">
         <h1 className="font-serif text-3xl font-bold">Pedido #{order.id.slice(0, 8)}</h1>
         <Badge>{order.status}</Badge>
+        {order.status === "PAID" && <RefundButton orderId={order.id} />}
+        {(order.status === "PAID" || order.status === "REFUNDED") && (
+          <Link
+            href={`/api/orders/${order.id}/receipt`}
+            target="_blank"
+            className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+          >
+            Baixar Recibo
+          </Link>
+        )}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>

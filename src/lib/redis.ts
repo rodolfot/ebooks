@@ -21,6 +21,15 @@ export const ratelimit = redis
     })
   : null
 
+export const checkoutRateLimit = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(5, "10 m"),
+      prefix: "ratelimit:checkout",
+      analytics: true,
+    })
+  : null
+
 export async function getCached<T>(key: string, fetcher: () => Promise<T>, ttl = 3600): Promise<T> {
   if (!redis) return fetcher()
 
