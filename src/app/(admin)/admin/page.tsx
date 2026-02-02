@@ -1,12 +1,14 @@
 import { prisma } from "@/lib/prisma"
 import { DashboardStats } from "@/components/admin/DashboardStats"
 import { RecentOrders } from "@/components/admin/RecentOrders"
+import { logPageView } from "@/lib/log-page-view"
 
 export const dynamic = "force-dynamic"
 
 export const metadata = { title: "Admin Dashboard" }
 
 export default async function AdminDashboardPage() {
+  logPageView("Dashboard", "/admin")
   const [totalRevenue, totalOrders, totalCustomers, totalEbooks, recentOrders] = await Promise.all([
     prisma.order.aggregate({ where: { status: "PAID" }, _sum: { total: true } }),
     prisma.order.count({ where: { status: "PAID" } }),

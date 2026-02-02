@@ -14,6 +14,7 @@ interface CreateLogInput {
   changedFields?: string[]
   errorMessage?: string
   request?: Request
+  endpoint?: string
   duration?: number
   statusCode?: number
 }
@@ -23,7 +24,7 @@ export async function createLog(input: CreateLogInput) {
     let ip: string | undefined
     let userAgent: string | undefined
     let method: string | undefined
-    let endpoint: string | undefined
+    let endpoint: string | undefined = input.endpoint
 
     if (input.request) {
       ip =
@@ -32,10 +33,12 @@ export async function createLog(input: CreateLogInput) {
         undefined
       userAgent = input.request.headers.get("user-agent") || undefined
       method = input.request.method
-      try {
-        endpoint = new URL(input.request.url).pathname
-      } catch {
-        endpoint = undefined
+      if (!endpoint) {
+        try {
+          endpoint = new URL(input.request.url).pathname
+        } catch {
+          endpoint = undefined
+        }
       }
     }
 

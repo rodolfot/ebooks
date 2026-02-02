@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { formatDate } from "@/lib/utils"
 import Link from "next/link"
 import { Eye } from "lucide-react"
+import { logPageView } from "@/lib/log-page-view"
 
 export const dynamic = "force-dynamic"
 
@@ -23,6 +24,7 @@ const statusLabels: Record<string, string> = {
 }
 
 export default async function AdminCustomersPage() {
+  logPageView("Clientes", "/admin/clientes")
   const users = await prisma.user.findMany({
     where: { role: "USER" },
     include: { _count: { select: { orders: true } } },

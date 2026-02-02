@@ -6,12 +6,14 @@ import { formatPrice } from "@/lib/utils"
 import { Plus } from "lucide-react"
 import Link from "next/link"
 import { EbookActions } from "@/components/admin/EbookActions"
+import { logPageView } from "@/lib/log-page-view"
 
 export const dynamic = "force-dynamic"
 
 export const metadata = { title: "Admin - E-books" }
 
 export default async function AdminEbooksPage() {
+  logPageView("E-books", "/admin/ebooks")
   const ebooks = await prisma.ebook.findMany({
     orderBy: { createdAt: "desc" },
   })

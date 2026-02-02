@@ -62,7 +62,7 @@ export async function POST(request: Request) {
       const freeOrder = await prisma.order.create({
         data: {
           userId: session.user.id,
-          status: "PAID",
+          status: "PENDING",
           paymentMethod: "FREE_COUPON",
           total: 0,
           discount,
@@ -70,7 +70,6 @@ export async function POST(request: Request) {
           customerEmail: data.customerEmail || session.user.email,
           customerName: data.customerName || session.user.name,
           customerCpf: data.customerCpf,
-          paidAt: new Date(),
           items: { create: orderItems },
         },
       })

@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { CheckCircle, XCircle } from "lucide-react"
+import { logPageView } from "@/lib/log-page-view"
 
 export const metadata = { title: "Admin - Configuracoes" }
 
@@ -22,6 +23,7 @@ function EnvStatus({ name, configured }: { name: string; configured: boolean }) 
 }
 
 export default function AdminSettingsPage() {
+  logPageView("Configuracoes", "/admin/configuracoes")
   const services = [
     { name: "Banco de Dados (PostgreSQL)", configured: !!process.env.DATABASE_URL },
     { name: "NextAuth Secret", configured: !!process.env.AUTH_SECRET },

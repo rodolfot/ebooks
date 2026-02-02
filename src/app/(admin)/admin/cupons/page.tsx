@@ -6,12 +6,14 @@ import { formatPrice } from "@/lib/utils"
 import { Plus } from "lucide-react"
 import Link from "next/link"
 import { CouponActions } from "@/components/admin/CouponActions"
+import { logPageView } from "@/lib/log-page-view"
 
 export const dynamic = "force-dynamic"
 
 export const metadata = { title: "Admin - Cupons" }
 
 export default async function AdminCouponsPage() {
+  logPageView("Cupons", "/admin/cupons")
   const coupons = await prisma.coupon.findMany({ orderBy: { createdAt: "desc" } })
 
   return (

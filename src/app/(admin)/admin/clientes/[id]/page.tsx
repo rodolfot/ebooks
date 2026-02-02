@@ -8,6 +8,7 @@ import { ArrowLeft, ShoppingCart, DollarSign, Star, Heart, Package } from "lucid
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ClientStatusActions } from "@/components/admin/ClientStatusActions"
+import { logPageView } from "@/lib/log-page-view"
 
 export const dynamic = "force-dynamic"
 
@@ -19,6 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function ClientDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
+  logPageView("Cliente Detalhes", `/admin/clientes/${id}`)
 
   const client = await prisma.user.findUnique({
     where: { id },

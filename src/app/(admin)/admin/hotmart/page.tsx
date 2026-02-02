@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import { Plus } from "lucide-react"
 import { HotmartActions } from "@/components/admin/HotmartActions"
+import { useLogPageView } from "@/hooks/useLogPageView"
 
 interface Ad {
   id: string
@@ -26,6 +27,7 @@ interface Ad {
 }
 
 export default function AdminHotmartPage() {
+  useLogPageView("Hotmart Ads")
   const [ads, setAds] = useState<Ad[]>([])
   const [showForm, setShowForm] = useState(false)
   const [title, setTitle] = useState("")

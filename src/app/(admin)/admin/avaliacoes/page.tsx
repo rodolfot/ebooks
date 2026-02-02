@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { StarRating } from "@/components/shared/StarRating"
 import { toast } from "sonner"
 import { formatDate } from "@/lib/utils"
+import { useLogPageView } from "@/hooks/useLogPageView"
 
 interface Review {
   id: string
@@ -19,6 +20,7 @@ interface Review {
 }
 
 export default function AdminReviewsPage() {
+  useLogPageView("Avaliacoes")
   const [reviews, setReviews] = useState<Review[]>([])
 
   useEffect(() => {

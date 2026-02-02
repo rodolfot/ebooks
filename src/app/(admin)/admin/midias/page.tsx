@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { ImageUpload } from "@/components/admin/ImageUpload"
 import { Copy, Check } from "lucide-react"
 import { toast } from "sonner"
+import { useLogPageView } from "@/hooks/useLogPageView"
 
 interface UploadedImage {
   url: string
@@ -13,6 +14,7 @@ interface UploadedImage {
 }
 
 export default function AdminMediaPage() {
+  useLogPageView("Midias")
   const [images, setImages] = useState<UploadedImage[]>([])
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null)
 

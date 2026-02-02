@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { ShoppingCart, Check } from "lucide-react"
 import { useCartStore, type CartItem } from "@/stores/cart"
 import { Button } from "@/components/ui/button"
@@ -13,7 +14,13 @@ interface AddToCartButtonProps {
 
 export function AddToCartButton({ item, size = "default", className }: AddToCartButtonProps) {
   const { addItem, hasItem } = useCartStore()
-  const inCart = hasItem(item.id)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const inCart = mounted && hasItem(item.id)
 
   function handleAdd() {
     if (inCart) {

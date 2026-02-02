@@ -10,9 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Download, Search, X, ChevronLeft, ChevronRight, AlertTriangle, Activity, TrendingUp, Zap } from "lucide-react"
+import { useLogPageView } from "@/hooks/useLogPageView"
 
-const ACTIONS = ["CREATE", "UPDATE", "DELETE", "APPROVE", "REJECT", "TOGGLE", "LOGIN", "EXPORT"] as const
-const RESOURCES = ["EBOOK", "ORDER", "COUPON", "REVIEW", "HOTMART_AD", "USER", "SYSTEM"] as const
+const ACTIONS = ["CREATE", "UPDATE", "DELETE", "APPROVE", "REJECT", "TOGGLE", "LOGIN", "EXPORT", "VIEW"] as const
+const RESOURCES = ["EBOOK", "ORDER", "COUPON", "REVIEW", "HOTMART_AD", "USER", "SYSTEM", "PAGE"] as const
 
 const actionColors: Record<string, string> = {
   CREATE: "bg-green-100 text-green-800",
@@ -23,6 +24,7 @@ const actionColors: Record<string, string> = {
   TOGGLE: "bg-purple-100 text-purple-800",
   LOGIN: "bg-cyan-100 text-cyan-800",
   EXPORT: "bg-yellow-100 text-yellow-800",
+  VIEW: "bg-teal-100 text-teal-800",
 }
 
 const resourceColors: Record<string, string> = {
@@ -33,6 +35,7 @@ const resourceColors: Record<string, string> = {
   HOTMART_AD: "border-pink-300 text-pink-700",
   USER: "border-cyan-300 text-cyan-700",
   SYSTEM: "border-gray-300 text-gray-700",
+  PAGE: "border-teal-300 text-teal-700",
 }
 
 interface Log {
@@ -70,6 +73,7 @@ interface Pagination {
 }
 
 export default function AdminLogsPage() {
+  useLogPageView("Logs")
   const [logs, setLogs] = useState<Log[]>([])
   const [stats, setStats] = useState<Stats | null>(null)
   const [pagination, setPagination] = useState<Pagination>({ page: 1, limit: 25, total: 0, totalPages: 0 })

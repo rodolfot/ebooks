@@ -34,7 +34,7 @@ export function HotmartActions({ ad, onUpdate }: HotmartActionsProps) {
   const [targetUrl, setTargetUrl] = useState(ad.targetUrl)
   const [position, setPosition] = useState(ad.position)
   const [productType, setProductType] = useState(ad.productType || "ad")
-  const [price, setPrice] = useState(ad.price?.toString() || "")
+  const [price, setPrice] = useState(ad.price != null ? ad.price.toFixed(2) : "")
   const [imageUrl, setImageUrl] = useState(ad.imageUrl || "")
   const [coverImageUrl, setCoverImageUrl] = useState(ad.coverImageUrl || "")
 
@@ -113,7 +113,7 @@ export function HotmartActions({ ad, onUpdate }: HotmartActionsProps) {
     setTargetUrl(ad.targetUrl)
     setPosition(ad.position)
     setProductType(ad.productType || "ad")
-    setPrice(ad.price?.toString() || "")
+    setPrice(ad.price != null ? ad.price.toFixed(2) : "")
     setImageUrl(ad.imageUrl || "")
     setCoverImageUrl(ad.coverImageUrl || "")
     setEditOpen(true)

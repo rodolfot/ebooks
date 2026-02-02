@@ -41,6 +41,7 @@ enum PaymentMethod {
   PIX
   CREDIT_CARD
   CRYPTO
+  BOLETO
   FREE_COUPON
   MANUAL
 }
@@ -79,6 +80,9 @@ model User {
   terminationDate   DateTime?
   customPermissions String[]
 
+  // Referral
+  referralCode  String?   @unique
+
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
@@ -88,6 +92,9 @@ model User {
   favorites     Favorite[]
   downloads     Download[]
   activityLogs  ActivityLog[]
+  notifications Notification[]
+  referralsMade     Referral[] @relation("Referrer")
+  referralsReceived Referral[] @relation("Referred")
 }
 
 model Account {
@@ -124,6 +131,28 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  active      Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Author {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  bio       String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ebooks    Ebook[]
+}
+
 model Ebook {
   id               String      @id @default(cuid())
   title            String
@@ -152,15 +181,42 @@ model Ebook {
   reviewCount      Int         @default(0)
   metaTitle        String?
   metaDescription  String?
+  authorId         String?
+  authorEntity     Author?     @relation(fields: [authorId], references: [id])
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
   orderItems       OrderItem[]
   reviews          Review[]
   favorites        Favorite[]
+  bundleItems      BundleItem[]
 
   @@index([category])
   @@index([status])
   @@index([featured])
+}
+
+model Bundle {
+  id            String       @id @default(cuid())
+  title         String
+  slug          String       @unique
+  description   String?
+  price         Float
+  originalPrice Float?
+  coverUrl      String?
+  active        Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  items         BundleItem[]
+}
+
+model BundleItem {
+  id       String @id @default(cuid())
+  bundleId String
+  ebookId  String
+  bundle   Bundle @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  ebook    Ebook  @relation(fields: [ebookId], references: [id])
+
+  @@unique([bundleId, ebookId])
 }
 
 model Order {
@@ -254,6 +310,7 @@ model Coupon {
   updatedAt     DateTime     @updatedAt
   orders        Order[]
   usages        CouponUsage[]
+  referrals     Referral[]
 }
 
 model CouponUsage {
@@ -296,6 +353,35 @@ model HotmartClick {
   @@index([adId])
 }
 
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String   @default("info")
+  read      Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+  @@index([createdAt])
+}
+
+model Referral {
+  id         String   @id @default(cuid())
+  referrerId String
+  referredId String   @unique
+  couponId   String?
+  status     String   @default("pending")
+  createdAt  DateTime @default(now())
+  referrer   User     @relation("Referrer", fields: [referrerId], references: [id])
+  referred   User     @relation("Referred", fields: [referredId], references: [id])
+  coupon     Coupon?  @relation(fields: [couponId], references: [id])
+
+  @@index([referrerId])
+}
+
 enum LogAction {
   CREATE
   UPDATE
@@ -305,6 +391,9 @@ enum LogAction {
   TOGGLE
   LOGIN
   EXPORT
+  VIEW
+  ERROR
+  REFUND
 }
 
 enum LogResource {
@@ -315,6 +404,12 @@ enum LogResource {
   HOTMART_AD
   USER
   SYSTEM
+  PAGE
+  CATEGORY
+  AUTHOR
+  BUNDLE
+  NOTIFICATION
+  REFERRAL
 }
 
 model ActivityLog {

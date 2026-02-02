@@ -4,13 +4,14 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import {
-  LayoutDashboard, BookOpen, Package, Users, Tag, Star, Settings, Megaphone, ArrowLeft, ImageIcon, ScrollText, UserCog,
+  LayoutDashboard, BookOpen, Package, Users, Tag, Star, Settings, Megaphone, ArrowLeft, ImageIcon, ScrollText, UserCog, DollarSign,
 } from "lucide-react"
 
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/ebooks", label: "E-books", icon: BookOpen },
   { href: "/admin/pedidos", label: "Pedidos", icon: Package },
+  { href: "/admin/financeiro", label: "Financeiro", icon: DollarSign },
   { href: "/admin/clientes", label: "Clientes", icon: Users },
   { href: "/admin/cupons", label: "Cupons", icon: Tag },
   { href: "/admin/avaliacoes", label: "Avaliacoes", icon: Star },

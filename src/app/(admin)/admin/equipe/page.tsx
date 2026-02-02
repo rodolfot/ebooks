@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { toast } from "sonner"
 import { Plus, Pencil, Trash2, Loader2, UserCog } from "lucide-react"
+import { useLogPageView } from "@/hooks/useLogPageView"
 
 const ROLE_LABELS: Record<string, string> = {
   INTERN: "Estagiario",
@@ -58,6 +59,7 @@ interface Employee {
 }
 
 export default function AdminEquipePage() {
+  useLogPageView("Equipe")
   const [employees, setEmployees] = useState<Employee[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)

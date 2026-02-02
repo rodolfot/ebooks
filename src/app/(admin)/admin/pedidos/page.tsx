@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { formatPrice, formatDate } from "@/lib/utils"
 import { PaymentMethodBadge } from "@/components/admin/PaymentMethodBadge"
 import Link from "next/link"
+import { logPageView } from "@/lib/log-page-view"
 
 export const dynamic = "force-dynamic"
 
@@ -22,6 +23,7 @@ export default async function AdminOrdersPage({
 }: {
   searchParams: Promise<{ status?: string; payment?: string }>
 }) {
+  logPageView("Pedidos", "/admin/pedidos")
   const params = await searchParams
   const where: Record<string, unknown> = {}
   if (params.status) where.status = params.status
