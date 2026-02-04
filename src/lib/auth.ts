@@ -8,7 +8,8 @@ import { isStaff } from "./permissions"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
-  adapter: PrismaAdapter(prisma) as any,
+  // @ts-expect-error - PrismaAdapter types are incompatible with NextAuth v5 beta
+  adapter: PrismaAdapter(prisma),
   providers: [
     ...authConfig.providers,
     CredentialsProvider({
@@ -47,7 +48,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id!
-        token.role = (user as any).role || "USER"
+        token.role = (user as { role?: string }).role || "USER"
       }
       // For Google OAuth: adapter creates user but role may not be in the user object
       if (account?.provider === "google" && token.email) {

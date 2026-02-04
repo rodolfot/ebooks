@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { Bell } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -28,23 +28,26 @@ export function NotificationBell() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
 
-  const fetchNotifications = useCallback(async () => {
-    if (!session?.user) return
-    try {
-      const res = await fetch("/api/notifications")
-      if (res.ok) {
-        const data = await res.json()
-        setNotifications(data.notifications)
-        setUnreadCount(data.unreadCount)
-      }
-    } catch {}
-  }, [session?.user])
-
   useEffect(() => {
-    fetchNotifications()
-    const interval = setInterval(fetchNotifications, 60000) // Poll every minute
+    if (!session?.user) return
+
+    async function loadNotifications() {
+      try {
+        const res = await fetch("/api/notifications")
+        if (res.ok) {
+          const data = await res.json()
+          setNotifications(data.notifications)
+          setUnreadCount(data.unreadCount)
+        }
+      } catch {
+        // Ignore fetch errors
+      }
+    }
+
+    loadNotifications()
+    const interval = setInterval(loadNotifications, 60000) // Poll every minute
     return () => clearInterval(interval)
-  }, [fetchNotifications])
+  }, [session?.user])
 
   async function markAllRead() {
     await fetch("/api/notifications/mark-all-read", { method: "POST" })

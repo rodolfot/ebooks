@@ -38,11 +38,15 @@ export function Header() {
   useEffect(() => {
     if (itemCount > prevCount.current) {
       setCartBounce(true)
-      const timer = setTimeout(() => setCartBounce(false), 600)
-      return () => clearTimeout(timer)
     }
     prevCount.current = itemCount
   }, [itemCount])
+
+  useEffect(() => {
+    if (!cartBounce) return
+    const timer = setTimeout(() => setCartBounce(false), 600)
+    return () => clearTimeout(timer)
+  }, [cartBounce])
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

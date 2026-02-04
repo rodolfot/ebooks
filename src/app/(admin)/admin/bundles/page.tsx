@@ -45,24 +45,26 @@ export default function AdminBundlesPage() {
   const [price, setPrice] = useState("")
   const [selectedEbooks, setSelectedEbooks] = useState<string[]>([])
 
+  useEffect(() => {
+    async function loadData() {
+      const [bundlesRes, ebooksRes] = await Promise.all([
+        fetch("/api/admin/bundles"),
+        fetch("/api/admin/ebooks"),
+      ])
+      if (bundlesRes.ok) setBundles(await bundlesRes.json())
+      if (ebooksRes.ok) {
+        const data = await ebooksRes.json()
+        setEbooks(Array.isArray(data) ? data : data.ebooks || [])
+      }
+      setLoading(false)
+    }
+    loadData()
+  }, [])
+
   const fetchBundles = useCallback(async () => {
     const res = await fetch("/api/admin/bundles")
     if (res.ok) setBundles(await res.json())
-    setLoading(false)
   }, [])
-
-  const fetchEbooks = useCallback(async () => {
-    const res = await fetch("/api/admin/ebooks")
-    if (res.ok) {
-      const data = await res.json()
-      setEbooks(Array.isArray(data) ? data : data.ebooks || [])
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchBundles()
-    fetchEbooks()
-  }, [fetchBundles, fetchEbooks])
 
   async function handleCreate() {
     if (!title.trim() || !price || selectedEbooks.length === 0) return

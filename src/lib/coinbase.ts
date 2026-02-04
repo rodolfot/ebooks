@@ -31,8 +31,9 @@ export async function createCoinbaseCharge(data: CoinbaseChargeData) {
   return response.json()
 }
 
+import crypto from "crypto"
+
 export function verifyCoinbaseWebhook(payload: string, signature: string): boolean {
-  const crypto = require("crypto")
   const secret = process.env.COINBASE_COMMERCE_WEBHOOK_SECRET || ""
   const hmac = crypto.createHmac("sha256", secret)
   hmac.update(payload)

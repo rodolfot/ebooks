@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useSyncExternalStore } from "react"
 import { ShoppingCart, Check } from "lucide-react"
 import { useCartStore, type CartItem } from "@/stores/cart"
 import { Button } from "@/components/ui/button"
@@ -12,13 +12,11 @@ interface AddToCartButtonProps {
   className?: string
 }
 
+const emptySubscribe = () => () => {}
+
 export function AddToCartButton({ item, size = "default", className }: AddToCartButtonProps) {
   const { addItem, hasItem } = useCartStore()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false)
 
   const inCart = mounted && hasItem(item.id)
 

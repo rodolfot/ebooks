@@ -23,7 +23,7 @@ export function SearchBar() {
     }, 400)
 
     return () => clearTimeout(timer)
-  }, [query])
+  }, [query, router, searchParams])
 
   return (
     <div className="relative">

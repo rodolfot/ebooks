@@ -24,8 +24,8 @@ export default function Error({
       </p>
       <div className="flex gap-4 justify-center">
         <Button onClick={reset}>Tentar Novamente</Button>
-        <Button variant="outline" asChild>
-          <a href="/">Voltar ao Início</a>
+        <Button variant="outline" onClick={() => window.location.href = "/"}>
+          Voltar ao Início
         </Button>
       </div>
     </div>

@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { StarRating } from "@/components/shared/StarRating"
 import { toast } from "sonner"
-import { formatDate } from "@/lib/utils"
 import { useLogPageView } from "@/hooks/useLogPageView"
 
 interface Review {

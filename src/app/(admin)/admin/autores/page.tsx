@@ -26,13 +26,19 @@ export default function AdminAutoresPage() {
   const [newName, setNewName] = useState("")
   const [newBio, setNewBio] = useState("")
 
+  useEffect(() => {
+    async function loadAuthors() {
+      const res = await fetch("/api/admin/authors")
+      if (res.ok) setAuthors(await res.json())
+      setLoading(false)
+    }
+    loadAuthors()
+  }, [])
+
   const fetchAuthors = useCallback(async () => {
     const res = await fetch("/api/admin/authors")
     if (res.ok) setAuthors(await res.json())
-    setLoading(false)
   }, [])
-
-  useEffect(() => { fetchAuthors() }, [fetchAuthors])
 
   async function handleCreate() {
     if (!newName.trim()) return

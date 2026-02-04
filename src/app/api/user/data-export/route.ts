@@ -18,7 +18,7 @@ export async function GET() {
 
   if (!user) return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 })
 
-  const { password, ...userData } = user
+  const { password: _password, ...userData } = user
 
   return new NextResponse(JSON.stringify(userData, null, 2), {
     headers: {

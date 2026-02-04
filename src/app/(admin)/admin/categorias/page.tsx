@@ -26,13 +26,19 @@ export default function AdminCategoriasPage() {
   const [newName, setNewName] = useState("")
   const [newDescription, setNewDescription] = useState("")
 
+  useEffect(() => {
+    async function loadCategories() {
+      const res = await fetch("/api/admin/categories")
+      if (res.ok) setCategories(await res.json())
+      setLoading(false)
+    }
+    loadCategories()
+  }, [])
+
   const fetchCategories = useCallback(async () => {
     const res = await fetch("/api/admin/categories")
     if (res.ok) setCategories(await res.json())
-    setLoading(false)
   }, [])
-
-  useEffect(() => { fetchCategories() }, [fetchCategories])
 
   async function handleCreate() {
     if (!newName.trim()) return
