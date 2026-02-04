@@ -75,6 +75,7 @@ export function ImageUpload({ onUpload, currentUrl }: ImageUploadProps) {
     <div className="space-y-3">
       {preview ? (
         <div className="relative inline-block">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={preview} alt="Preview" className="w-40 h-52 object-cover rounded-lg border" />
           <Button
             type="button"

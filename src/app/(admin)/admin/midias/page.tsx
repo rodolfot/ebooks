@@ -49,6 +49,7 @@ export default function AdminMediaPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {images.map((img) => (
                 <div key={img.url} className="group relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={img.thumbnailUrl || img.url}
                     alt="Uploaded"

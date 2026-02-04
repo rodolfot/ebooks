@@ -15,7 +15,7 @@ import {
 import { useCartStore } from "@/stores/cart"
 import { CartDrawer } from "@/components/cart/CartDrawer"
 import { NotificationBell } from "@/components/layout/NotificationBell"
-import { useState, useEffect, useRef } from "react"
+import { useState, useRef } from "react"
 import { cn } from "@/lib/utils"
 
 const navLinks = [
@@ -34,19 +34,15 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [cartBounce, setCartBounce] = useState(false)
   const prevCount = useRef(itemCount)
+  const bounceTimeout = useRef<NodeJS.Timeout | null>(null)
 
-  useEffect(() => {
-    if (itemCount > prevCount.current) {
-      setCartBounce(true)
-    }
-    prevCount.current = itemCount
-  }, [itemCount])
-
-  useEffect(() => {
-    if (!cartBounce) return
-    const timer = setTimeout(() => setCartBounce(false), 600)
-    return () => clearTimeout(timer)
-  }, [cartBounce])
+  // Check if item was added and trigger bounce
+  if (itemCount > prevCount.current && !cartBounce) {
+    setCartBounce(true)
+    if (bounceTimeout.current) clearTimeout(bounceTimeout.current)
+    bounceTimeout.current = setTimeout(() => setCartBounce(false), 600)
+  }
+  prevCount.current = itemCount
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

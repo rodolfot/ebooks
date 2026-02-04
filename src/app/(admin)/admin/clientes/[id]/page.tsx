@@ -106,6 +106,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
           {client.image ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
             <img src={client.image} alt={client.name || ""} className="w-16 h-16 rounded-full object-cover border" />
           ) : (
             <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center text-xl font-bold text-muted-foreground">

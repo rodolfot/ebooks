@@ -18,7 +18,8 @@ export async function GET() {
 
   if (!user) return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 })
 
-  const { password: _password, ...userData } = user
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { password, ...userData } = user
 
   return new NextResponse(JSON.stringify(userData, null, 2), {
     headers: {

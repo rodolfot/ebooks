@@ -60,6 +60,7 @@ export function PixPayment({ orderId, qrCode, qrCodeBase64, onPaid }: PixPayment
 
         {qrCodeBase64 && (
           <div className="flex justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`data:image/png;base64,${qrCodeBase64}`}
               alt="QR Code PIX"
