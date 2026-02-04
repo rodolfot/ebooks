@@ -15,8 +15,7 @@ import {
 import { useCartStore } from "@/stores/cart"
 import { CartDrawer } from "@/components/cart/CartDrawer"
 import { NotificationBell } from "@/components/layout/NotificationBell"
-import { useState, useRef } from "react"
-import { cn } from "@/lib/utils"
+import { useState } from "react"
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -32,17 +31,6 @@ export function Header() {
   const clearCart = useCartStore((s) => s.clearCart)
   const [cartOpen, setCartOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [cartBounce, setCartBounce] = useState(false)
-  const prevCount = useRef(itemCount)
-  const bounceTimeout = useRef<NodeJS.Timeout | null>(null)
-
-  // Check if item was added and trigger bounce
-  if (itemCount > prevCount.current && !cartBounce) {
-    setCartBounce(true)
-    if (bounceTimeout.current) clearTimeout(bounceTimeout.current)
-    bounceTimeout.current = setTimeout(() => setCartBounce(false), 600)
-  }
-  prevCount.current = itemCount
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -100,10 +88,10 @@ export function Header() {
 
           <Sheet open={cartOpen} onOpenChange={setCartOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className={cn("relative", cartBounce && "animate-bounce")}>
+              <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5" />
                 {itemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center" style={{ animation: cartBounce ? 'badge-pop 0.3s ease-out' : undefined }}>
+                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
                     {itemCount}
                   </span>
                 )}
